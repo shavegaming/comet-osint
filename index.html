@@ -3,202 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comet OSINT Dashboard</title>
+<title>Comet OSINT</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#000;
-  --panel:#0d1224;
   --accent:#2271ff;
   --text:#fff;
   --muted:#7a7f9c;
-  --border:#1f2340;
 }
 
-/* Reset */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:'JetBrains Mono', monospace;
-  background-color:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-}
+/* Reset & Body */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'JetBrains Mono', monospace; background:#000; color:#fff; overflow:hidden; }
 
 /* Navbar */
-nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:1rem 3rem;
-  border-bottom:1px solid var(--border);
-}
-nav .links a{
-  color:var(--text);
-  text-decoration:none;
-  margin-right:2rem;
-  font-weight:500;
-}
-nav .cta{
-  background:#fff;
-  color:#000;
-  padding:.5rem 1.5rem;
-  border-radius:999px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
-}
-nav .cta:hover{opacity:.85;}
+nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 3rem; background:#0b0e1a; }
+nav a { color:#fff; text-decoration:none; margin-right:2rem; font-weight:500; }
+nav button { background:#fff; color:#000; border:none; padding:.5rem 1.5rem; border-radius:999px; font-weight:700; cursor:pointer; transition:.2s; }
+nav button:hover { opacity:.85; }
 
-/* Hero / Dashboard split */
-.dashboard{
-  display:flex;
-  flex-wrap:wrap;
-  padding:3rem;
-  gap:2rem;
-}
-.dashboard-left{
-  flex:1;
-  min-width:320px;
-}
-.dashboard-left h1{
-  font-size:2.8rem;
-  font-weight:700;
-  margin-bottom:1rem;
-}
-.dashboard-left h1 span{
-  border-right:2px solid var(--accent);
-  animation:blink 1s steps(1) infinite;
-}
-@keyframes blink{
-  0%,50%,100%{border-color:var(--accent);}
-  25%,75%{border-color:transparent;}
-}
-.dashboard-left p{
-  color:var(--muted);
-  font-size:1.1rem;
-  margin-bottom:2rem;
-}
-.dashboard-left input{
-  width:100%;
-  padding:.8rem 1rem;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:var(--text);
-  font-family:inherit;
-  margin-bottom:1rem;
-}
-.dashboard-left button{
-  background:var(--accent);
-  color:#fff;
-  border:none;
-  border-radius:999px;
-  padding:.6rem 1.5rem;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
-}
-.dashboard-left button:hover{opacity:.85;}
+/* Hero Split */
+.hero { display:flex; justify-content:space-between; align-items:center; height:calc(100vh - 60px); padding:3rem; }
+.hero-left { flex:1; max-width:45%; }
+.hero-left h1 { font-size:3rem; font-weight:700; white-space:nowrap; }
+.hero-left h1 .cursor { display:inline-block; width:1ch; background:var(--accent); animation:blink 1s steps(1) infinite; margin-left:4px; }
+@keyframes blink { 0%,50%,100% { opacity:1; } 25%,75% { opacity:0; } }
+.hero-left p { margin-top:1rem; color:var(--muted); font-size:1.1rem; line-height:1.5; }
+.hero-left input { margin-top:2rem; width:100%; padding:.8rem 1rem; border-radius:8px; border:1px solid #222; background:#0b0e1a; color:#fff; font-family:inherit; }
+.hero-left button { margin-top:1rem; background:var(--accent); color:#fff; border:none; padding:.6rem 1.5rem; border-radius:999px; cursor:pointer; font-weight:700; transition:.2s; }
+.hero-left button:hover { opacity:.85; }
 
-/* Right panel */
-.dashboard-right{
-  flex:1;
-  min-width:320px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:2rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  max-height:600px;
-  overflow-y:auto;
-}
-.module{
-  border-bottom:1px solid var(--border);
-  padding-bottom:.8rem;
-}
-.module:last-child{border-bottom:none;}
-.module h3{
-  font-size:.85rem;
-  color:var(--muted);
-  text-transform:uppercase;
-  margin-bottom:.5rem;
-}
-.module p{
-  font-size:.95rem;
-  color:var(--text);
-}
+/* Right: Globe */
+.hero-right { flex:1; display:flex; justify-content:center; align-items:center; }
+#globeCanvas { width:100%; max-width:600px; height:400px; }
 
-/* Stats row */
-.stats{
-  display:flex;
-  justify-content:space-around;
-  margin-top:3rem;
-  padding:2rem 0;
-  border-top:1px solid var(--border);
-}
-.stat{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-weight:700;
-}
-.stat p{
-  color:var(--muted);
-  font-weight:400;
-  font-size:.85rem;
-}
+/* Stats Row */
+.stats { display:flex; justify-content:space-around; padding:2rem 3rem; border-top:1px solid rgba(255,255,255,0.1); }
+.stat { display:flex; flex-direction:column; align-items:center; font-weight:700; }
+.stat p { font-weight:400; color:var(--muted); font-size:.85rem; margin-top:.2rem; }
 </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <nav>
-  <div class="links">
+  <div>
     <a href="#">Dashboard</a>
     <a href="#">Capabilities</a>
     <a href="#">Pricing</a>
   </div>
-  <button class="cta">Get Started</button>
+  <button>Get Started</button>
 </nav>
 
-<div class="dashboard">
-  <!-- Left panel: controls -->
-  <div class="dashboard-left">
-    <h1>Look up Phone Number<span></span></h1>
-    <p>Enter a username, email, domain, or IP to gather global public intelligence.</p>
-    <input type="text" placeholder="Target...">
-    <button>Search</button>
+<!-- Hero Split -->
+<div class="hero">
+  <div class="hero-left">
+    <h1>Look up Phone Number<span class="cursor"></span></h1>
+    <p>Search global data sources to identify owners, locations, and associated information instantly.</p>
+    <input type="text" id="searchInput" placeholder="Enter username, email, domain or IP">
+    <button id="searchBtn">Search</button>
   </div>
-
-  <!-- Right panel: results -->
-  <div class="dashboard-right" id="results">
-    <div class="module">
-      <h3>Target Recon</h3>
-      <p>Awaiting scan...</p>
-    </div>
-    <div class="module">
-      <h3>Network Analysis</h3>
-      <p>Awaiting scan...</p>
-    </div>
-    <div class="module">
-      <h3>Data Points</h3>
-      <p>500M+ public data points available.</p>
-    </div>
+  <div class="hero-right">
+    <canvas id="globeCanvas"></canvas>
   </div>
 </div>
 
+<!-- Stats -->
 <div class="stats">
-  <div class="stat">
-    500M+<p>Data Points</p>
-  </div>
-  <div class="stat">
-    180+<p>Countries</p>
-  </div>
-  <div class="stat">
-    99.9%<p>Uptime</p>
-  </div>
+  <div class="stat">500M+<p>Data Points</p></div>
+  <div class="stat">180+<p>Countries</p></div>
+  <div class="stat">99.9%<p>Uptime</p></div>
 </div>
+
+<script>
+// 3D Globe Animation
+const canvas = document.getElementById('globeCanvas');
+const ctx = canvas.getContext('2d');
+let w, h, points = [];
+function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; points = []; for (let i = 0; i < 300; i++) { points.push({ x: Math.random() * w, y: Math.random() * h, z: Math.random() }); } }
+resize();
+window.addEventListener('resize', resize);
+function draw() {
+  ctx.clearRect(0, 0, w, h);
+  points.forEach(p => {
+    const x = p.x - w/2;
+    const y = p.y - h/2;
+    const scale = 200/(200 + p.z*500);
+    ctx.beginPath();
+    ctx.arc(w/2 + x*scale, h/2 + y*scale, 1.5, 0, Math.PI*2);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    points.forEach(o => {
+      const x2 = o.x - w/2;
+      const y2 = o.y - h/2;
+      const scale2 = 200/(200 + o.z*500);
+      const dist = Math.hypot((x*scale)-(x2*scale2),(y*scale)-(y2*scale2));
+      if(dist<30){ ctx.beginPath(); ctx.moveTo(w/2 + x*scale, h/2 + y*scale); ctx.lineTo(w/2 + x2*scale2, h/2 + y2*scale2); ctx.strokeStyle='rgba(34,113,255,0.2)'; ctx.stroke(); }
+    });
+  });
+  points.forEach(p => { p.z += 0.002; if(p.z>1)p.z=0; });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// Search button: navigate to results page
+document.getElementById('searchBtn').addEventListener('click', () => {
+  const query = document.getElementById('searchInput').value.trim();
+  if(!query) return alert("Enter a search term!");
+  // Go to results page with query as URL parameter
+  window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+});
+</script>
 
 </body>
 </html>
