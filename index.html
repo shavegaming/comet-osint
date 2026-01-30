@@ -3,178 +3,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COMET OSINT</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
+<title>Comet OSINT</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0e1020;
-  --panel:#161a34;
-  --accent:#4f7cff;
-  --border:#2a2f55;
-  --text:#e6e8f2;
-  --muted:#9aa0c3;
+/* Reset & Base */
+* {margin:0; padding:0; box-sizing:border-box;}
+body {
+  font-family:'JetBrains Mono', monospace;
+  background-color:#000;
+  color:#ffffff;
+  overflow-x:hidden;
 }
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter,sans-serif;
-  background:radial-gradient(1000px 600px at top,#1a2150,var(--bg));
-  color:var(--text);
-  display:grid;
-  grid-template-columns:260px 1fr;
-  height:100vh;
+
+/* Background grid */
+body::before {
+  content:"";
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background-image:linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size:50px 50px;
+  z-index:-1;
 }
-aside{
-  background:var(--panel);
-  border-right:1px solid var(--border);
-  padding:2rem 1.5rem;
-}
-.logo{
-  font-size:1.4rem;
-  font-weight:700;
-  margin-bottom:2rem;
-}
-.logo span{color:var(--accent)}
-.nav{color:var(--muted);font-size:.85rem}
-main{
-  display:grid;
-  grid-template-rows:auto 1fr;
-}
-.top{
-  padding:1.5rem;
-  border-bottom:1px solid var(--border);
+
+/* Navbar */
+nav {
   display:flex;
-  gap:1rem;
+  justify-content:space-between;
+  align-items:center;
+  padding:1.5rem 4rem;
 }
-input{
-  flex:1;
-  background:#0b0f2a;
-  border:1px solid var(--border);
-  border-radius:8px;
-  color:var(--text);
-  padding:.8rem 1rem;
-}
-button{
-  background:var(--accent);
-  border:none;
-  border-radius:8px;
-  padding:0 1.6rem;
-  font-weight:600;
-  cursor:pointer;
-}
-.results{
-  padding:1.5rem;
-  overflow:auto;
-  display:grid;
-  gap:1rem;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-}
-.card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:1rem;
-}
-.card h4{
-  margin:0 0 .4rem;
-  font-size:.85rem;
-  color:var(--muted);
-  text-transform:uppercase;
-}
-.card a{
-  color:var(--accent);
+nav .links a {
+  color:#fff;
   text-decoration:none;
-  display:block;
-  margin:.3rem 0;
-  font-size:.9rem;
+  margin-right:2rem;
+  font-weight:500;
 }
-.small{font-size:.8rem;color:var(--muted)}
+nav .cta {
+  background:#fff;
+  color:#000;
+  padding:.6rem 1.5rem;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+nav .cta:hover {opacity:.8;}
+
+/* Hero Section */
+.hero {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:4rem;
+}
+.hero-left {
+  max-width:45%;
+}
+.hero-left h1 {
+  font-size:3rem;
+  font-weight:700;
+  white-space:nowrap;
+}
+.hero-left .cursor {
+  display:inline-block;
+  width:1ch;
+  background:#fff;
+  animation:blink 1s steps(1) infinite;
+  margin-left:4px;
+}
+@keyframes blink {
+  0%,50%,100% {opacity:1;}
+  25%,75% {opacity:0;}
+}
+.hero-left p {
+  margin-top:1rem;
+  color:rgba(255,255,255,0.6);
+  font-size:1.1rem;
+  line-height:1.5;
+}
+
+/* Hero right globe */
+.hero-right {
+  position:relative;
+  width:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+#globeCanvas {
+  width:100%;
+  max-width:500px;
+  height:500px;
+}
+
+/* Search Button */
+.search-btn {
+  margin-top:2rem;
+  display:inline-flex;
+  align-items:center;
+  background:#fff;
+  color:#000;
+  border:none;
+  border-radius:999px;
+  padding:.8rem 2rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+.search-btn:hover {opacity:.85;}
+.search-btn svg {
+  margin-left:.5rem;
+  width:16px; height:16px;
+  stroke:black;
+  stroke-width:2;
+  fill:none;
+}
+
+/* Key Features/Stats Footer */
+.stats {
+  display:flex;
+  justify-content:space-around;
+  margin-top:6rem;
+  padding:2rem 4rem;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
+.stat {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-weight:600;
+}
+.stat svg {
+  width:32px; height:32px;
+  margin-bottom:.5rem;
+  stroke:#fff;
+  stroke-width:2;
+  fill:none;
+}
+
+/* Globe animation lines */
+canvas {display:block;}
 </style>
 </head>
-
 <body>
-<aside>
-  <div class="logo">☄️ Comet <span>OSINT</span></div>
-  <div class="nav">Public intelligence dashboard<br>No automation • No scraping</div>
-</aside>
 
-<main>
-  <div class="top">
-    <input id="q" placeholder="Username, email, domain, or IP">
-    <button onclick="run()">Search</button>
+<!-- Navbar -->
+<nav>
+  <div class="links">
+    <a href="#">Pricing</a>
+    <a href="#">Dashboard</a>
+    <a href="#">Capabilities</a>
   </div>
+  <button class="cta">Get Started</button>
+</nav>
 
-  <div class="results" id="out">
-    <div class="small">Enter a target to begin OSINT.</div>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-left">
+    <h1>Look up Phone Number<span class="cursor"></span></h1>
+    <p>Instantly search global data sources to identify owners, locations, and associated information with speed and precision.</p>
+    <button class="search-btn">
+      Search
+      <svg viewBox="0 0 24 24">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="14,7 19,12 14,17"/>
+      </svg>
+    </button>
   </div>
-</main>
+  <div class="hero-right">
+    <canvas id="globeCanvas"></canvas>
+  </div>
+</section>
+
+<!-- Stats Footer -->
+<section class="stats">
+  <div class="stat">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+    500M+ Data Points
+  </div>
+  <div class="stat">
+    <svg viewBox="0 0 24 24"><path d="M12 2 L12 22"/></svg>
+    180+ Countries
+  </div>
+  <div class="stat">
+    <svg viewBox="0 0 24 24"><path d="M2 12 L22 12"/></svg>
+    99.9% Uptime
+  </div>
+</section>
 
 <script>
-function typeOf(q){
-  if(q.includes("@")) return "email";
-  if(/^\d+\.\d+\.\d+\.\d+$/.test(q)) return "ip";
-  if(q.includes(".")) return "domain";
-  return "username";
-}
+// Globe simulation
+const canvas=document.getElementById('globeCanvas');
+const ctx=canvas.getContext('2d');
+let w, h, points=[];
+function resize(){w=canvas.width=canvas.offsetWidth;h=canvas.height=canvas.offsetHeight;points=[];for(let i=0;i<300;i++){points.push({x:Math.random()*w,y:Math.random()*h,z:Math.random()});}}
+resize();
+window.addEventListener('resize',resize);
 
-async function run(){
-  const q=document.getElementById("q").value.trim();
-  if(!q) return;
-  const out=document.getElementById("out");
-  out.innerHTML="";
-  const t=typeOf(q);
-
-  // Search links (real OSINT)
-  out.innerHTML+=`
-    <div class="card">
-      <h4>Search Engines</h4>
-      <a href="https://duckduckgo.com/?q=${q}" target="_blank">DuckDuckGo</a>
-      <a href="https://www.google.com/search?q=${q}" target="_blank">Google</a>
-      <a href="https://www.bing.com/search?q=${q}" target="_blank">Bing</a>
-    </div>
-  `;
-
-  out.innerHTML+=`
-    <div class="card">
-      <h4>Social & Forums</h4>
-      <a href="https://twitter.com/search?q=${q}" target="_blank">X (Twitter)</a>
-      <a href="https://www.reddit.com/search/?q=${q}" target="_blank">Reddit</a>
-      <a href="https://www.instagram.com/${q}" target="_blank">Instagram Profile</a>
-    </div>
-  `;
-
-  // WHOIS (real)
-  if(t==="domain"||t==="ip"){
-    out.innerHTML+=`
-      <div class="card">
-        <h4>Network</h4>
-        <a href="https://who.is/whois/${q}" target="_blank">WHOIS Lookup</a>
-        <a href="https://dnschecker.org/#A/${q}" target="_blank">DNS Records</a>
-      </div>
-    `;
-  }
-
-  // GitHub real API
-  out.innerHTML+=`
-    <div class="card" id="gh">
-      <h4>GitHub</h4>
-      <div class="small">Loading repositories…</div>
-    </div>
-  `;
- // real shit
-  try{
-    const res=await fetch(`https://api.github.com/search/users?q=${q}`);
-    const data=await res.json();
-    const gh=document.getElementById("gh");
-    gh.innerHTML=`<h4>GitHub Users</h4>`;
-    data.items?.slice(0,5).forEach(u=>{
-      gh.innerHTML+=`<a href="${u.html_url}" target="_blank">${u.login}</a>`;
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  points.forEach(p=>{
+    const x=p.x-(w/2);
+    const y=p.y-(h/2);
+    const scale=200/(200+p.z*500);
+    ctx.beginPath();
+    ctx.arc(w/2+x*scale,h/2+y*scale,1,0,Math.PI*2);
+    ctx.fillStyle='white';
+    ctx.fill();
+    points.forEach(o=>{
+      const x2=o.x-(w/2);
+      const y2=o.y-(h/2);
+      const scale2=200/(200+o.z*500);
+      const dist=Math.hypot((x*scale)-(x2*scale2),(y*scale)-(y2*scale2));
+      if(dist<30){ctx.beginPath();ctx.moveTo(w/2+x*scale,h/2+y*scale);ctx.lineTo(w/2+x2*scale2,h/2+y2*scale2);ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.stroke();}
     });
-  }catch{
-    document.getElementById("gh").innerHTML+=`<div class="small">Rate limited</div>`;
-  }
+  });
+  points.forEach(p=>{p.z+=0.001;if(p.z>1)p.z=0;});
+  requestAnimationFrame(draw);
 }
+draw();
 </script>
+
 </body>
 </html>
