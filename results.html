@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comet OSINT | Results</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#000;
+  --accent:#2271ff;
+  --text:#fff;
+  --muted:#7a7f9c;
+}
+body { font-family:'JetBrains Mono', monospace; background:#000; color:#fff; margin:0; padding:0; }
+nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 3rem; background:#0b0e1a; }
+nav a { color:#fff; text-decoration:none; margin-right:2rem; font-weight:500; }
+nav button { background:#fff; color:#000; border:none; padding:.5rem 1.5rem; border-radius:999px; font-weight:700; cursor:pointer; transition:.2s; }
+nav button:hover { opacity:.85; }
+.container { padding:2rem 3rem; }
+h1 { font-size:2.5rem; margin-bottom:1rem; }
+.results { margin-top:2rem; background:#0d1224; padding:1rem; border-radius:12px; max-width:700px; }
+.result-item { padding:.5rem 0; border-bottom:1px solid #222; }
+.result-item:last-child { border-bottom:none; }
+.result-item strong { color:var(--accent); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div><a href="index.html">Dashboard</a><a href="#">Capabilities</a><a href="#">Pricing</a></div>
+  <button onclick="window.location='index.html'">New Search</button>
+</nav>
+
+<div class="container">
+  <h1>Search Results</h1>
+  <div class="results" id="resultsPanel">
+    <!-- Results populated by JS -->
+  </div>
+</div>
+
+<script>
+// Get query from URL
+const params = new URLSearchParams(window.location.search);
+const query = params.get('query') || 'Unknown';
+document.querySelector('h1').textContent = `Results for: ${query}`;
+
+// Fake OSINT results
+const data = [
+  {title:'Owner', value: query+' Smith'},
+  {title:'Location', value:'Los Angeles, USA'},
+  {title:'Email', value: query.toLowerCase()+'@example.com'},
+  {title:'Network', value:'192.168.1.'+Math.floor(Math.random()*255)},
+  {title:'Linked Accounts', value:'GitHub, Twitter, LinkedIn'}
+];
+
+const resultsPanel = document.getElementById('resultsPanel');
+data.forEach(r=>{
+  const div = document.createElement('div');
+  div.className='result-item';
+  div.innerHTML=`<strong>${r.title}:</strong> ${r.value}`;
+  resultsPanel.appendChild(div);
+});
+</script>
+
+</body>
+</html>
