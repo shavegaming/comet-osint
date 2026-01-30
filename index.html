@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Comet OSINT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --panel: #131a2e;
+      --accent: #7c8cff;
+      --text: #e6e8f2;
+      --muted: #9aa0c3;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(1200px 600px at top, #121a3a, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 900px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .search {
+      margin-bottom: 24px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0f1529;
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #7f86b3;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      background: linear-gradient(135deg, var(--accent), #9aa5ff);
+      color: #0b0f1a;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .actions button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .results {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: #0f1529;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      transition: transform 0.15s ease, border 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(124,140,255,0.5);
+    }
+
+    .card a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+    }
+
+    .card span {
+      display: block;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 26px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <header>
+      <div>
+        <div class="logo">☄️ Comet <span>OSINT</span></div>
+        <div class="tagline">Open‑source intelligence from public data</div>
+      </div>
+    </header>
+
+    <div class="search">
+      <input id="query" placeholder="Username, email, domain, or name" />
+      <div class="actions">
+        <button onclick="runOSINT()">Search</button>
+        <button class="secondary" onclick="clearResults()">Clear</button>
+      </div>
+    </div>
+
+    <div id="results" class="results"></div>
+
+    <footer>
+      Public sources only • No tracking • No automation • Educational use
+    </footer>
+  </div>
+
+  <script>
+    function runOSINT() {
+      const q = document.getElementById("query").value.trim();
+      const results = document.getElementById("results");
+
+      if (!q) return;
+
+      results.innerHTML = `
+        <div class="card">
+          <a href="https://www.google.com/search?q=${q}" target="_blank">
+            Google
+            <span>General web results</span>
+          </a>
+        </div>
+
+        <div class="card">
+          <a href="https://duckduckgo.com/?q=${q}" target="_blank">
+            DuckDuckGo
+            <span>Privacy‑focused search</span>
+          </a>
+        </div>
+
+        <div class="card">
+          <a href="https://www.reddit.com/search/?q=${q}" target="_blank">
+            Reddit
+            <span>Forums & discussions</span>
+          </a>
+        </div>
+
+        <div class="card">
+          <a href="https://twitter.com/search?q=${q}" target="_blank">
+            X (Twitter)
+            <span>Public posts</span>
+          </a>
+        </div>
+
+        <div class="card">
+          <a href="https://github.com/search?q=${q}" target="_blank">
+            GitHub
+            <span>Code & profiles</span>
+          </a>
+        </div>
+
+        <div class="card">
+          <a href="https://who.is/whois/${q}" target="_blank">
+            WHOIS
+            <span>Domain registration</span>
+          </a>
+        </div>
+      `;
+    }
+
+    function clearResults() {
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("query").value = "";
+    }
+  </script>
+
+</body>
+</html>
