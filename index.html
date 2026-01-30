@@ -3,273 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comet OSINT | Intelligence Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>COMET OSINT | Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #050507;
-            --accent-blue: #2271ff;
-            --accent-glow: rgba(34, 113, 255, 0.15);
-            --text-primary: #ffffff;
-            --text-secondary: #8a8a8e;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --grid-line: rgba(34, 113, 255, 0.04);
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
+            --bg: #050507;
+            --surface: #0e0e12;
+            --accent: #2271ff;
+            --text: #ffffff;
+            --text-dim: #666;
+            --border: #1a1a1f;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            background-color: var(--bg-deep);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
         }
 
-        /* Technical Grid Overlay */
-        .technical-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .container {
             width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--grid-line) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: -1;
-            pointer-events: none;
+            max-width: 900px;
         }
 
-        /* Navigation */
-        nav {
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 6%;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(5, 5, 7, 0.8);
-            backdrop-filter: blur(10px);
         }
 
-        .brand {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            font-size: 1.2rem;
-            color: var(--text-primary);
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background: #00ff41;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #00ff41;
         }
 
-        .nav-links {
+        /* Search Section */
+        .search-area {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 4px;
+        }
+
+        .input-group {
             display: flex;
-            gap: 2.5rem;
-            align-items: center;
+            gap: 10px;
         }
 
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent-blue);
-        }
-
-        .cta-button {
-            background: var(--text-primary);
-            color: var(--bg-deep);
-            padding: 0.6rem 1.4rem;
-            border-radius: 2px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .cta-button:hover {
-            opacity: 0.9;
-        }
-
-        /* Hero Section */
-        .hero {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            align-items: center;
-            padding: 8% 6%;
-            min-height: 80vh;
-        }
-
-        .hero-text {
-            max-width: 620px;
-        }
-
-        .sys-path {
+        input {
+            flex: 1;
+            background: #000;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            color: var(--accent);
             font-family: 'JetBrains Mono', monospace;
-            color: var(--accent-blue);
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
+            font-size: 1rem;
+            outline: none;
         }
 
-        h1 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 3.8rem;
-            font-weight: 700;
-            margin: 0 0 1.5rem 0;
-            letter-spacing: -2px;
-        }
+        input:focus { border-color: var(--accent); }
 
-        .description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2.5rem;
-            max-width: 500px;
-        }
-
-        .search-trigger {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            font-size: 0.9rem;
-            font-family: 'JetBrains Mono', monospace;
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            font-weight: bold;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .search-trigger:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        /* Abstract Wireframe Sphere */
-        .visual-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .wireframe-sphere {
-            width: 450px;
-            height: 450px;
-            border: 1px solid rgba(34, 113, 255, 0.2);
-            border-radius: 50%;
-            position: relative;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-        }
-
-        .wireframe-sphere::after {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 10%;
-            right: 10%;
-            bottom: 10%;
-            border: 1px dashed rgba(34, 113, 255, 0.1);
-            border-radius: 50%;
-            animation: spin 30s linear infinite;
-        }
-
-        /* Data Stats */
-        .stats-footer {
-            display: flex;
-            gap: 5rem;
-            padding: 3rem 6%;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .stat-block {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .stat-label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
         }
 
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Results Area */
+        #results-container {
+            margin-top: 2rem;
+            display: none;
         }
 
-        @media (max-width: 1024px) {
-            .hero { grid-template-columns: 1fr; text-align: center; }
-            .hero-text { margin: 0 auto; }
-            .visual-container { display: none; }
-            h1 { font-size: 2.8rem; }
-            .stats-footer { justify-content: center; gap: 2rem; }
+        .terminal-box {
+            background: #000;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            max-height: 400px;
+            overflow-y: auto;
+            color: #d1d1d1;
         }
+
+        .line { margin-bottom: 4px; }
+        .blue { color: var(--accent); }
+        .dim { color: var(--text-dim); }
+        .success { color: #00ff41; }
+
+        /* Loader Animation */
+        .loader {
+            display: none;
+            margin: 2rem 0;
+            text-align: center;
+            color: var(--accent);
+        }
+
+        @keyframes pulse { 50% { opacity: 0.5; } }
+        .pulsing { animation: pulse 1s infinite; }
     </style>
 </head>
 <body>
 
-    <div class="technical-overlay"></div>
+<div class="container">
+    <div class="header">
+        <div><strong>COMET</strong> // OSINT_SYSTEM_v1.0</div>
+        <div style="font-size: 0.7rem; color: var(--text-dim);">
+            <span class="status-dot"></span> SYSTEM_ONLINE
+        </div>
+    </div>
 
-    <nav>
-        <div class="brand">COMET OSINT</div>
-        <div class="nav-links">
-            <a href="#">Solutions</a>
-            <a href="#">API</a>
-            <a href="#">Documentation</a>
-            <a href="#">Log In</a>
-            <a href="#" class="cta-button">Initialize Access</a>
+    <div class="search-area">
+        <p class="dim" style="margin-top:0">Enter Phone Number or Username to Begin Reconnaissance</p>
+        <div class="input-group">
+            <input type="text" id="targetInput" placeholder="e.g. +1 555 0123 / @handle" autocomplete="off">
+            <button id="searchBtn" onclick="startScan()">Analyze</button>
         </div>
-    </nav>
+    </div>
 
-    <main class="hero">
-        <div class="hero-text">
-            <div class="sys-path">/// Global.Intelligence.v4</div>
-            <h1>Automated Digital Reconnaissance</h1>
-            <p class="description">
-                Cross-reference high-fidelity data points across 180+ jurisdictions. 
-                Comet OSINT provides actionable intelligence for security researchers and investigators.
-            </p>
-            <button class="search-trigger">
-                QUERY DATABASE <span>&rarr;</span>
-            </button>
-        </div>
+    <div id="loader" class="loader pulsing">INITIALIZING GLOBAL SEARCH...</div>
 
-        <div class="visual-container">
-            <div class="wireframe-sphere"></div>
-        </div>
-    </main>
+    <div id="results-container">
+        <div class="terminal-box" id="terminal">
+            </div>
+    </div>
+</div>
 
-    <footer class="stats-footer">
-        <div class="stat-block">
-            <span class="stat-value">840M+</span>
-            <span class="stat-label">Indexed Records</span>
-        </div>
-        <div class="stat-block">
-            <span class="stat-value">14ms</span>
-            <span class="stat-label">Avg. Latency</span>
-        </div>
-        <div class="stat-block">
-            <span class="stat-value">E2EE</span>
-            <span class="stat-label">Search Privacy</span>
-        </div>
-    </footer>
+<script>
+    const terminal = document.getElementById('terminal');
+    const resultsContainer = document.getElementById('results-container');
+    const loader = document.getElementById('loader');
+    const btn = document.getElementById('searchBtn');
+
+    function addLine(text, className = '') {
+        const line = document.createElement('div');
+        line.className = 'line ' + className;
+        line.innerHTML = `[${new Date().toLocaleTimeString()}] ${text}`;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    async function startScan() {
+        const target = document.getElementById('targetInput').value;
+        if (!target) return;
+
+        // Reset
+        btn.disabled = true;
+        terminal.innerHTML = '';
+        resultsContainer.style.display = 'block';
+        loader.style.display = 'block';
+
+        // Simulated OSINT Steps
+        const logs = [
+            `Establishing connection to encrypted nodes...`,
+            `Target identified: <span class="blue">${target}</span>`,
+            `Scraping public records across 180+ jurisdictions...`,
+            `Querying leaked database archives (2022-2025)...`,
+            `Cross-referencing social media metadata...`,
+            `Analyzing VOIP vs Landline signatures...`,
+            `Search complete. Matches found in 4 databases.`
+        ];
+
+        for (const log of logs) {
+            await new Promise(r => setTimeout(r, Math.random() * 800 + 400));
+            addLine(log);
+        }
+
+        loader.style.display = 'none';
+        btn.disabled = false;
+
+        // Mock Final Report
+        addLine('-------------------------------------------');
+        addLine('RECONNAISSANCE REPORT:', 'success');
+        addLine(`Carrier: <span class="blue">Global Telcom Solutions</span>`);
+        addLine(`Location: <span class="blue">North America (Estimated)</span>`);
+        addLine(`Risk Score: <span class="blue">Low (3/10)</span>`);
+        addLine('-------------------------------------------');
+        addLine('SYSTEM READY FOR NEXT QUERY', 'dim');
+    }
+</script>
 
 </body>
 </html>
