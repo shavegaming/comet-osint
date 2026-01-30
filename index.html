@@ -3,228 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comet OSINT</title>
+<title>Comet OSINT Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* Reset & Base */
-* {margin:0; padding:0; box-sizing:border-box;}
-body {
-  font-family:'JetBrains Mono', monospace;
-  background-color:#000;
-  color:#ffffff;
-  overflow-x:hidden;
+:root {
+  --bg:#0a0d1a;
+  --panel:#11152a;
+  --accent:#2271ff;
+  --text:#ffffff;
+  --muted:#8a8fa8;
+  --border:#1f2235;
 }
 
-/* Background grid */
-body::before {
-  content:"";
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background-image:linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
-                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size:50px 50px;
-  z-index:-1;
+/* Reset */
+*{margin:0; padding:0; box-sizing:border-box;}
+body{
+  font-family:'JetBrains Mono', monospace;
+  background-color:var(--bg);
+  color:var(--text);
 }
 
 /* Navbar */
-nav {
+nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:1.5rem 4rem;
+  padding:1rem 2rem;
+  border-bottom:1px solid var(--border);
 }
-nav .links a {
-  color:#fff;
+nav .links a{
+  color:var(--text);
   text-decoration:none;
   margin-right:2rem;
   font-weight:500;
 }
-nav .cta {
-  background:#fff;
-  color:#000;
-  padding:.6rem 1.5rem;
+nav .cta{
+  background:var(--accent);
+  color:#fff;
+  padding:.5rem 1.5rem;
   border-radius:999px;
   font-weight:700;
   cursor:pointer;
   transition:.2s;
 }
-nav .cta:hover {opacity:.8;}
+nav .cta:hover{opacity:.8;}
 
-/* Hero Section */
-.hero {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:4rem;
-}
-.hero-left {
-  max-width:45%;
-}
-.hero-left h1 {
-  font-size:3rem;
-  font-weight:700;
-  white-space:nowrap;
-}
-.hero-left .cursor {
-  display:inline-block;
-  width:1ch;
-  background:#fff;
-  animation:blink 1s steps(1) infinite;
-  margin-left:4px;
-}
-@keyframes blink {
-  0%,50%,100% {opacity:1;}
-  25%,75% {opacity:0;}
-}
-.hero-left p {
-  margin-top:1rem;
-  color:rgba(255,255,255,0.6);
-  font-size:1.1rem;
-  line-height:1.5;
+/* Main layout */
+.container{
+  padding:2rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:1.5rem;
 }
 
-/* Hero right globe */
-.hero-right {
-  position:relative;
-  width:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-#globeCanvas {
-  width:100%;
-  max-width:500px;
-  height:500px;
-}
-
-/* Search Button */
-.search-btn {
-  margin-top:2rem;
-  display:inline-flex;
-  align-items:center;
-  background:#fff;
-  color:#000;
-  border:none;
-  border-radius:999px;
-  padding:.8rem 2rem;
-  font-weight:700;
-  cursor:pointer;
+/* Cards */
+.card{
+  background:var(--panel);
+  padding:1.5rem;
+  border-radius:12px;
+  border:1px solid var(--border);
   transition:.2s;
 }
-.search-btn:hover {opacity:.85;}
-.search-btn svg {
-  margin-left:.5rem;
-  width:16px; height:16px;
-  stroke:black;
-  stroke-width:2;
-  fill:none;
+.card:hover{
+  border-color:var(--accent);
 }
-
-/* Key Features/Stats Footer */
-.stats {
-  display:flex;
-  justify-content:space-around;
-  margin-top:6rem;
-  padding:2rem 4rem;
-  border-top:1px solid rgba(255,255,255,0.1);
-}
-.stat {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-weight:600;
-}
-.stat svg {
-  width:32px; height:32px;
+.card h3{
+  font-size:.85rem;
+  color:var(--muted);
   margin-bottom:.5rem;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
+  text-transform:uppercase;
 }
-
-/* Globe animation lines */
-canvas {display:block;}
+.card p{
+  font-size:.95rem;
+  color:var(--text);
+}
+.card button{
+  margin-top:1rem;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:.5rem 1rem;
+  border-radius:999px;
+  cursor:pointer;
+  transition:.2s;
+}
+.card button:hover{opacity:.85;}
 </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <nav>
   <div class="links">
-    <a href="#">Pricing</a>
     <a href="#">Dashboard</a>
     <a href="#">Capabilities</a>
+    <a href="#">Pricing</a>
   </div>
   <button class="cta">Get Started</button>
 </nav>
 
-<!-- Hero Section -->
-<section class="hero">
-  <div class="hero-left">
-    <h1>Look up Phone Number<span class="cursor"></span></h1>
-    <p>Instantly search global data sources to identify owners, locations, and associated information with speed and precision.</p>
-    <button class="search-btn">
-      Search
-      <svg viewBox="0 0 24 24">
-        <line x1="5" y1="12" x2="19" y2="12"/>
-        <polyline points="14,7 19,12 14,17"/>
-      </svg>
-    </button>
+<div class="container">
+  <div class="card">
+    <h3>Target Recon</h3>
+    <p>Scan usernames, emails, or domains to gather public information.</p>
+    <button>Run Scan</button>
   </div>
-  <div class="hero-right">
-    <canvas id="globeCanvas"></canvas>
+  <div class="card">
+    <h3>Network Stats</h3>
+    <p>Monitor network connections and live public endpoints.</p>
+    <button>View Data</button>
   </div>
-</section>
-
-<!-- Stats Footer -->
-<section class="stats">
-  <div class="stat">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-    500M+ Data Points
+  <div class="card">
+    <h3>Global Coverage</h3>
+    <p>Access data from 180+ countries in real-time.</p>
+    <button>Explore</button>
   </div>
-  <div class="stat">
-    <svg viewBox="0 0 24 24"><path d="M12 2 L12 22"/></svg>
-    180+ Countries
+  <div class="card">
+    <h3>Data Points</h3>
+    <p>Over 500M+ verified public data points available.</p>
+    <button>Details</button>
   </div>
-  <div class="stat">
-    <svg viewBox="0 0 24 24"><path d="M2 12 L22 12"/></svg>
-    99.9% Uptime
-  </div>
-</section>
-
-<script>
-// Globe simulation
-const canvas=document.getElementById('globeCanvas');
-const ctx=canvas.getContext('2d');
-let w, h, points=[];
-function resize(){w=canvas.width=canvas.offsetWidth;h=canvas.height=canvas.offsetHeight;points=[];for(let i=0;i<300;i++){points.push({x:Math.random()*w,y:Math.random()*h,z:Math.random()});}}
-resize();
-window.addEventListener('resize',resize);
-
-function draw(){
-  ctx.clearRect(0,0,w,h);
-  points.forEach(p=>{
-    const x=p.x-(w/2);
-    const y=p.y-(h/2);
-    const scale=200/(200+p.z*500);
-    ctx.beginPath();
-    ctx.arc(w/2+x*scale,h/2+y*scale,1,0,Math.PI*2);
-    ctx.fillStyle='white';
-    ctx.fill();
-    points.forEach(o=>{
-      const x2=o.x-(w/2);
-      const y2=o.y-(h/2);
-      const scale2=200/(200+o.z*500);
-      const dist=Math.hypot((x*scale)-(x2*scale2),(y*scale)-(y2*scale2));
-      if(dist<30){ctx.beginPath();ctx.moveTo(w/2+x*scale,h/2+y*scale);ctx.lineTo(w/2+x2*scale2,h/2+y2*scale2);ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.stroke();}
-    });
-  });
-  points.forEach(p=>{p.z+=0.001;if(p.z>1)p.z=0;});
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
+</div>
 
 </body>
 </html>
