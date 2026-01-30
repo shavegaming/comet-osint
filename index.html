@@ -1,204 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COMET OSINT | Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #050507;
-            --surface: #0e0e12;
-            --accent: #2271ff;
-            --text: #ffffff;
-            --text-dim: #666;
-            --border: #1a1a1f;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMET OSINT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-        }
-
-        .header {
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background: #00ff41;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-            box-shadow: 0 0 8px #00ff41;
-        }
-
-        /* Search Section */
-        .search-area {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 2rem;
-            border-radius: 4px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        input {
-            flex: 1;
-            background: #000;
-            border: 1px solid var(--border);
-            padding: 1rem;
-            color: var(--accent);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        input:focus { border-color: var(--accent); }
-
-        button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Results Area */
-        #results-container {
-            margin-top: 2rem;
-            display: none;
-        }
-
-        .terminal-box {
-            background: #000;
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            font-size: 0.85rem;
-            max-height: 400px;
-            overflow-y: auto;
-            color: #d1d1d1;
-        }
-
-        .line { margin-bottom: 4px; }
-        .blue { color: var(--accent); }
-        .dim { color: var(--text-dim); }
-        .success { color: #00ff41; }
-
-        /* Loader Animation */
-        .loader {
-            display: none;
-            margin: 2rem 0;
-            text-align: center;
-            color: var(--accent);
-        }
-
-        @keyframes pulse { 50% { opacity: 0.5; } }
-        .pulsing { animation: pulse 1s infinite; }
-    </style>
+<style>
+:root {
+  --bg:#0e1020;
+  --panel:#161a34;
+  --accent:#4f7cff;
+  --border:#2a2f55;
+  --text:#e6e8f2;
+  --muted:#9aa0c3;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:radial-gradient(1000px 600px at top,#1a2150,var(--bg));
+  color:var(--text);
+  display:grid;
+  grid-template-columns:260px 1fr;
+  height:100vh;
+}
+aside{
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  padding:2rem 1.5rem;
+}
+.logo{
+  font-size:1.4rem;
+  font-weight:700;
+  margin-bottom:2rem;
+}
+.logo span{color:var(--accent)}
+.nav{color:var(--muted);font-size:.85rem}
+main{
+  display:grid;
+  grid-template-rows:auto 1fr;
+}
+.top{
+  padding:1.5rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  gap:1rem;
+}
+input{
+  flex:1;
+  background:#0b0f2a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  padding:.8rem 1rem;
+}
+button{
+  background:var(--accent);
+  border:none;
+  border-radius:8px;
+  padding:0 1.6rem;
+  font-weight:600;
+  cursor:pointer;
+}
+.results{
+  padding:1.5rem;
+  overflow:auto;
+  display:grid;
+  gap:1rem;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:1rem;
+}
+.card h4{
+  margin:0 0 .4rem;
+  font-size:.85rem;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.card a{
+  color:var(--accent);
+  text-decoration:none;
+  display:block;
+  margin:.3rem 0;
+  font-size:.9rem;
+}
+.small{font-size:.8rem;color:var(--muted)}
+</style>
 </head>
+
 <body>
+<aside>
+  <div class="logo">☄️ Comet <span>OSINT</span></div>
+  <div class="nav">Public intelligence dashboard<br>No automation • No scraping</div>
+</aside>
 
-<div class="container">
-    <div class="header">
-        <div><strong>COMET</strong> // OSINT_SYSTEM_v1.0</div>
-        <div style="font-size: 0.7rem; color: var(--text-dim);">
-            <span class="status-dot"></span> SYSTEM_ONLINE
-        </div>
-    </div>
+<main>
+  <div class="top">
+    <input id="q" placeholder="Username, email, domain, or IP">
+    <button onclick="run()">Search</button>
+  </div>
 
-    <div class="search-area">
-        <p class="dim" style="margin-top:0">Enter Phone Number or Username to Begin Reconnaissance</p>
-        <div class="input-group">
-            <input type="text" id="targetInput" placeholder="e.g. +1 555 0123 / @handle" autocomplete="off">
-            <button id="searchBtn" onclick="startScan()">Analyze</button>
-        </div>
-    </div>
-
-    <div id="loader" class="loader pulsing">INITIALIZING GLOBAL SEARCH...</div>
-
-    <div id="results-container">
-        <div class="terminal-box" id="terminal">
-            </div>
-    </div>
-</div>
+  <div class="results" id="out">
+    <div class="small">Enter a target to begin OSINT.</div>
+  </div>
+</main>
 
 <script>
-    const terminal = document.getElementById('terminal');
-    const resultsContainer = document.getElementById('results-container');
-    const loader = document.getElementById('loader');
-    const btn = document.getElementById('searchBtn');
+function typeOf(q){
+  if(q.includes("@")) return "email";
+  if(/^\d+\.\d+\.\d+\.\d+$/.test(q)) return "ip";
+  if(q.includes(".")) return "domain";
+  return "username";
+}
 
-    function addLine(text, className = '') {
-        const line = document.createElement('div');
-        line.className = 'line ' + className;
-        line.innerHTML = `[${new Date().toLocaleTimeString()}] ${text}`;
-        terminal.appendChild(line);
-        terminal.scrollTop = terminal.scrollHeight;
-    }
+async function run(){
+  const q=document.getElementById("q").value.trim();
+  if(!q) return;
+  const out=document.getElementById("out");
+  out.innerHTML="";
+  const t=typeOf(q);
 
-    async function startScan() {
-        const target = document.getElementById('targetInput').value;
-        if (!target) return;
+  // Search links (real OSINT)
+  out.innerHTML+=`
+    <div class="card">
+      <h4>Search Engines</h4>
+      <a href="https://duckduckgo.com/?q=${q}" target="_blank">DuckDuckGo</a>
+      <a href="https://www.google.com/search?q=${q}" target="_blank">Google</a>
+      <a href="https://www.bing.com/search?q=${q}" target="_blank">Bing</a>
+    </div>
+  `;
 
-        // Reset
-        btn.disabled = true;
-        terminal.innerHTML = '';
-        resultsContainer.style.display = 'block';
-        loader.style.display = 'block';
+  out.innerHTML+=`
+    <div class="card">
+      <h4>Social & Forums</h4>
+      <a href="https://twitter.com/search?q=${q}" target="_blank">X (Twitter)</a>
+      <a href="https://www.reddit.com/search/?q=${q}" target="_blank">Reddit</a>
+      <a href="https://www.instagram.com/${q}" target="_blank">Instagram Profile</a>
+    </div>
+  `;
 
-        // Simulated OSINT Steps
-        const logs = [
-            `Establishing connection to encrypted nodes...`,
-            `Target identified: <span class="blue">${target}</span>`,
-            `Scraping public records across 180+ jurisdictions...`,
-            `Querying leaked database archives (2022-2025)...`,
-            `Cross-referencing social media metadata...`,
-            `Analyzing VOIP vs Landline signatures...`,
-            `Search complete. Matches found in 4 databases.`
-        ];
+  // WHOIS (real)
+  if(t==="domain"||t==="ip"){
+    out.innerHTML+=`
+      <div class="card">
+        <h4>Network</h4>
+        <a href="https://who.is/whois/${q}" target="_blank">WHOIS Lookup</a>
+        <a href="https://dnschecker.org/#A/${q}" target="_blank">DNS Records</a>
+      </div>
+    `;
+  }
 
-        for (const log of logs) {
-            await new Promise(r => setTimeout(r, Math.random() * 800 + 400));
-            addLine(log);
-        }
-
-        loader.style.display = 'none';
-        btn.disabled = false;
-
-        // Mock Final Report
-        addLine('-------------------------------------------');
-        addLine('RECONNAISSANCE REPORT:', 'success');
-        addLine(`Carrier: <span class="blue">Global Telcom Solutions</span>`);
-        addLine(`Location: <span class="blue">North America (Estimated)</span>`);
-        addLine(`Risk Score: <span class="blue">Low (3/10)</span>`);
-        addLine('-------------------------------------------');
-        addLine('SYSTEM READY FOR NEXT QUERY', 'dim');
-    }
+  // GitHub real API
+  out.innerHTML+=`
+    <div class="card" id="gh">
+      <h4>GitHub</h4>
+      <div class="small">Loading repositories…</div>
+    </div>
+  `;
+ // real shit
+  try{
+    const res=await fetch(`https://api.github.com/search/users?q=${q}`);
+    const data=await res.json();
+    const gh=document.getElementById("gh");
+    gh.innerHTML=`<h4>GitHub Users</h4>`;
+    data.items?.slice(0,5).forEach(u=>{
+      gh.innerHTML+=`<a href="${u.html_url}" target="_blank">${u.login}</a>`;
+    });
+  }catch{
+    document.getElementById("gh").innerHTML+=`<div class="small">Rate limited</div>`;
+  }
+}
 </script>
-
 </body>
 </html>
